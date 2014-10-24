@@ -1,0 +1,68 @@
+<!DOCTYPE HTML>
+<html lang="es">
+<head>
+    <meta charset="utf-8">
+    <title>BackboneWeather</title>
+
+    <link rel="stylesheet" type="text/css" href="css/vendor/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="css/style.css">
+    <link rel="stylesheet" type="text/css" href="css/bootstrap-select.min.css">
+
+    <script type="text/template" id="regionOption">
+            <option value="<%=value%>"><%=name%></option>
+    </script>
+
+    <script type="text/template" id="selectOption">
+            <option value="<%=value%>"><%=name%></option>
+    </script>
+</head>
+<body>
+    <main>
+        <header>
+            <div class="page-header">
+              <h1>Clima de Ciudades</h1>
+            </div>
+        </header>
+
+        <aside class="col-sm-4 col-md-4 col-md-push-8">
+            <nav>
+                <div class="form-group">
+                    <label for="region" class="col-sm-3">Región: </label>
+                    <select name="region" id="region" class="selectpicker">
+                        <option value=""></option>
+                    </select>
+                </div>
+                 <div class="form-group">
+                    <label for="countries" class="col-sm-3">País: </label>
+                    <select name="countries" id="countries" class="selectpicker">
+                        <option value=""></option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="cities" class="col-sm-3">Ciudad: </label>
+                    <select name="cities" id="cities" class="selectpicker">
+                        <option value=""></option>
+                    </select>
+                </div>
+              </nav>
+        </aside>
+
+        <section class="col-sm-8 col-md-8 col-md-pull-4">
+            seccion de datos
+        </section>
+  
+        <footer>Aquí el pie de pagina</footer>
+    </main>
+
+    <script type="text/javascript" src="js/vendor/jquery-2.1.1.min.js"></script>
+    <script type="text/javascript" src="js/vendor/underscore-min.js"></script>
+    <script type="text/javascript" src="js/vendor/backbone-min.js"></script>
+    <script type="text/javascript" src="js/vendor/bootstrap.min.js"></script>
+    <script type="text/javascript" src="js/bootstrap-select.min.js"></script>
+    <script type="text/javascript" src="js/main.js"></script>
+
+</body>
+
+
+</html>
+
