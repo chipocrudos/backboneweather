@@ -1,77 +1,67 @@
 //(function () {
 
-var region = [
-		{value:'europe', name: 'Europa'},
-		{value: 'americas', name: 'America'},
-		{value:'asia', name: 'Asia'},
-		{value:'africa', name: 'Africa'},
-		{value:'oceania', name: 'Oceania'},
-	]
-
-
 /* models */
-	//modelo region
-	var RegionModel = Backbone.Model.extend({
-		defaults: {
-			value:'',
-			 name: ''
-		},
-	});
-
 	//modelo paises
-	var CountriesModel = Backbone.Model.extend({
-		//url: 'http://restcountries.eu/rest/v1/name/',
-	});
-/*
-	//modelo ciudades
-	var CitiesModel = Backbone.Model.extend({
-	});
-*/
+	var CountriesModel = Backbone.Model.extend();
 
+	//modelo weather
+	var WeatherModel = Backbone.Model.extend({
+		initialize: function(option){
+			this.capital = option.capital;
+			this.alpha2Code = option.alpha2Code;
+			this.fetch();
+		},
+		url: function(){
+			return 'http://api.openweathermap.org/data/2.5/weather?q=' + encodeURIComponent(this.capital) + ','+ encodeURIComponent(this.alpha2Code);
+		}
+
+	});
 
 /* collections */
-	//Colleccion region
-	var RegionCollection = Backbone.Collection.extend({
-		model: RegionModel,
-	});
-
 	//Collecion paises
 	var CountriesCollection = Backbone.Collection.extend({
 		model: CountriesModel,
 		initialize: function(option){
-			//console.log(option.region);
 			this.region = option.region;
 			this.fetch();
 		},
 		url: function() {
 			return 'http://restcountries.eu/rest/v1/region/' + encodeURIComponent(this.region);
 		},
+		customSearch: function(filters){
+			return this.filter(function(model) {
+				var add = false;
+				return _.any(model.values(), function(value) {
+					if(!_.isObject(value)){
+				        if (_.isNumber(value)){
+				            value = value.toString();
+				        }
+				        if (_.isString(value)){
+				            valuel = value.toLowerCase();
+			            	if ((value.search(filters) !=-1 || valuel.search(filters) !=-1) && !add){
+			            		add = true;
+			            		return ~value.indexOf(filters)!== -1;
+			            	}
+				        }
+			        }
+				});
+			});
+  		}
 	});
 
 /* views */
-	
 	//Region list render view
-	var RegionListView = Backbone.View.extend({
+	var RegionView = Backbone.View.extend({
 		el:'#region',
-		template: _.template($('#regionOption').html()),
-		initialize: function(){
-			this.render();
-			this.listenTo( this.collection, 'add', this.renderRegion);
-		},
 		events:{
 			'change': 'changeValue',
 		},
-		render: function() {
-			this.collection.each(function( item ){
-				this.renderRegion( item );
-			}, this);
-		},
-		renderRegion: function( item ){
-			this.$el.append( this.template(item.toJSON()) );
-		},
 		changeValue: function(){
-			var countriescollection = new CountriesCollection({region: $(this.el).val()});
-			var countrieslistview = new CountriesListView({collection:countriescollection});
+			var region = $(this.el).val();
+			if (region){
+				var countriescollection = new CountriesCollection({region:region});
+				var countrieslistview = new CountriesListView({collection:countriescollection});
+			}
 		}
 	});
 
@@ -84,42 +74,56 @@ var region = [
 			this.listenTo( this.collection, 'add', this.renderCountries);
 		},
 		events:{
-			'change': 'changeValue',
+			'keyup': 'searchValue',
+			'click .btn-order': 'order',
 		},
-		render: function() {
-			this.collection.each(function( item ){
-				//this.renderCountries( item );
-				console.log(item.toJSON());
-			}, this);
+		render: function (){
+			$('section').html('');
+		},
+		renderList: function(){
+			this.render();
+			_.each(this.results, function(item){
+			 	var countryview = new CountryView({model:item});
+			});
 		},
 		renderCountries: function( item ){
-			var translations = item.get('translations');
-
-			console.log(item.get('name'));
-			console.log(translations);
-
-			console.log(item.get('name') + ' ' + translations.es);
-			//this.$el.append( this.template(item.toJSON()) );
+			var countryview = new CountryView({model:item});
 		},
-		changeValue: function(){
-			console.log($(this.el).val());
-			//var countriescollection = new CountriesCollection({region: $(this.el).val()});
-			//var countrieslistview = new CountriesListView({collection:countrieslistview});
+		searchValue: function(e){
+			e.preventDefault();
+			var letters = $(this.el).val();
+			if (letters.length > 1){
+				this.results = this.collection.customSearch(letters);
+			}else{
+				this.results = this.collection.toArray();
+			}
+			this.renderList();
+		},
+		order: function(e){
+			console.log(e);
+
+		}
+	});
+
+	var CountryView = Backbone.View.extend({
+		el:'section',
+		template: _.template($('#countrydata').html()),
+		initialize: function(){
+			this.render();
+		},
+		render: function(){
+			//console.log(this.model.toJSON());
+			//console.log(this.weather);
+			this.$el.append( this.template( this.model.toJSON() ));
 		}
 	});
 
 
-
-
 /* asignación de objectos*/
 	//region
-	var regioncollection = new RegionCollection(region);
-	var regionlistview = new RegionListView({collection:regioncollection});
+	var regionlistview = new RegionView();
 
-	//countries
-	//var countriescollection = new CountriesCollection({region: ''});
-
-
-
+	//test variable
+	//var countriecollection = new CountriesCollection({region:'americas'});
 
 //}());

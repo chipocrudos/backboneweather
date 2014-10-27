@@ -6,6 +6,10 @@ html, body {
 	height: 90%;
 }
 
+main, footer {
+	width: 90%;
+}
+
 main {
 	margin: 50px auto;
 	width: 90%;
@@ -13,6 +17,7 @@ main {
 }
 
 footer {
+	margin: 5px auto;
 	height: 10%;
 }
 
@@ -30,3 +35,15 @@ section {
   border: 1px solid rgba(86,61,124,.2);
 }
 */
+
+.country {
+	height: 350px;
+}
+
+img.flag{
+	height: 160px;	
+}
+
+aside input{
+	width:60%;
+}
