@@ -24,6 +24,7 @@
 		initialize: function(option){
 			this.region = option.region;
 			this.fetch();
+			
 		},
 		url: function() {
 			return 'http://restcountries.eu/rest/v1/region/' + encodeURIComponent(this.region);
@@ -53,6 +54,9 @@
 	//Region list render view
 	var RegionView = Backbone.View.extend({
 		el:'#region',
+		initialize: function(){
+			$('.btn-order').click(this.order);
+		},
 		events:{
 			'change': 'changeValue',
 		},
@@ -62,7 +66,12 @@
 				var countriescollection = new CountriesCollection({region:region});
 				var countrieslistview = new CountriesListView({collection:countriescollection});
 			}
-		}
+		},
+  		order: function(event){
+  			$('.btn-order').removeClass('btn-primary');
+  			$(this).addClass('btn-primary');
+  			console.log($(this).attr('id'));
+  		}
 	});
 
 	//Region list render view
@@ -124,6 +133,6 @@
 	var regionlistview = new RegionView();
 
 	//test variable
-	//var countriecollection = new CountriesCollection({region:'americas'});
+	var countriecollection = new CountriesCollection({region:'americas'});
 
 //}());
