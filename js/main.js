@@ -50,13 +50,61 @@
   		}
 	});
 
+	var ResultsCountries = Backbone.Collection.extend({
+		model: CountriesModel,
+        /**
+	    * Sort by supplied attributes.  First param is sorted first, and
+	    * last param is final subsort
+	    * @param {String} sortAttributes
+	    * @example collection.sortBy("last_name","first_name")
+	    */
+	    sortBy : function(sortAttributes){
+	        var attributes = arguments;
+                if(attributes.length){
+                this.models = this._sortBy(this.models,attributes);
+            }   
+	    },
+	    /**
+	     * Recursive sort
+	     */
+	    _sortBy : function(models,attributes){
+	        var attr,
+	                that = this;
+	        //base case
+	        if(attributes.length === 1){
+	            attr = attributes[0];
+	            return _(models).sortBy(function(model){
+	                return model.get(attr);
+	            });
+	        }
+	        else{
+	            attr = attributes[0];
+	            attributes = _.last(attributes,attributes.length-1);
+
+	            //split up models by sort attribute, 
+	            //then call _sortBy with remaining attributes
+	            models = _(models).chain().
+	                sortBy(function(model){
+	                    return model.get(attr);
+	                }).
+	                groupBy(function(model){
+	                    return model.get(attr);
+	                }).
+	                toArray().
+	                value();
+
+	            _(models).each(function(modelSet,index){
+	                models[index] = that._sortBy(models[index],attributes);
+	            });
+	            return _(models).flatten(); 
+	        }
+	    }
+	});
+
 /* views */
 	//Region list render view
 	var RegionView = Backbone.View.extend({
 		el:'#region',
-		initialize: function(){
-			$('.btn-order').click(this.order);
-		},
 		events:{
 			'change': 'changeValue',
 		},
@@ -67,51 +115,52 @@
 				var countrieslistview = new CountriesListView({collection:countriescollection});
 			}
 		},
-  		order: function(event){
-  			$('.btn-order').removeClass('btn-primary');
-  			$(this).addClass('btn-primary');
-  			console.log($(this).attr('id'));
-  		}
 	});
 
 	//Region list render view
 	var CountriesListView = Backbone.View.extend({
-		el:'#countries',
+		el:'aside',
 		template: _.template($('#selectOption').html()),
 		initialize: function(){
 			this.render();
+			this.results = new ResultsCountries();
 			this.listenTo( this.collection, 'add', this.renderCountries);
 		},
 		events:{
-			'keyup': 'searchValue',
-			'click .btn-order': 'order',
+			'keyup #countries': 'searchValue',
+			'click .btn-order': 'orderResult',
 		},
 		render: function (){
 			$('section').html('');
+			this.order = this.$('.btn-order.btn-primary').attr('id');
 		},
 		renderList: function(){
-			this.render();
-			_.each(this.results, function(item){
+			$('section').html('');
+			this.results.sortBy(this.order);
+			this.results.each(function(item){
 			 	var countryview = new CountryView({model:item});
 			});
 		},
 		renderCountries: function( item ){
 			var countryview = new CountryView({model:item});
 		},
-		searchValue: function(e){
-			e.preventDefault();
-			var letters = $(this.el).val();
+		searchValue: function(event){
+			event.preventDefault();
+			var letters = this.$('#countries').val();
 			if (letters.length > 1){
-				this.results = this.collection.customSearch(letters);
+				this.results.reset(this.collection.customSearch(letters));
 			}else{
-				this.results = this.collection.toArray();
+				this.results.reset(this.collection.toArray());
 			}
 			this.renderList();
 		},
-		order: function(e){
-			console.log(e);
-
-		}
+		orderResult: function(event){
+  			this.$('.btn-order').removeClass('btn-primary');
+  			$(event.target).addClass('btn-primary');
+  			this.order = $(event.target).attr('id');
+  			if (!this.results.length) this.results.reset(this.collection.toArray());
+  			this.renderList();
+  		},
 	});
 
 	var CountryView = Backbone.View.extend({
@@ -134,5 +183,7 @@
 
 	//test variable
 	var countriecollection = new CountriesCollection({region:'americas'});
+	var results = new ResultsCountries();
+	results.reset(countriecollection.toArray());
 
 //}());
