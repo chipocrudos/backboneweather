@@ -6,6 +6,14 @@
 
 	//modelo weather
 	var WeatherModel = Backbone.Model.extend({
+		default:{
+			weather:[],
+			wind:{},
+			main:{},
+			coord:{},
+			sys:{},
+			clouds:{},
+		},
 		initialize: function(option){
 			this.capital = option.capital;
 			this.alpha2Code = option.alpha2Code;
@@ -13,6 +21,10 @@
 		},
 		url: function(){
 			return 'http://api.openweathermap.org/data/2.5/weather?q=' + encodeURIComponent(this.capital) + ','+ encodeURIComponent(this.alpha2Code);
+		},
+		data: function(){
+			var info = {}
+			info.weather = this.get('weather')[0]
 		}
 
 	});
@@ -142,6 +154,12 @@
 			});
 		},
 		renderCountries: function( item ){
+			var weather = new WeatherModel({
+				capital: item.get('capital'),
+				alpha2Code: item.get('alpha2Code')
+			});
+			//console.log(weather.toJSON());
+			item.set({weather:weather.toJSON()});
 			var countryview = new CountryView({model:item});
 		},
 		searchValue: function(event){
@@ -170,8 +188,8 @@
 			this.render();
 		},
 		render: function(){
-			//console.log(this.model.toJSON());
-			//console.log(this.weather);
+			console.log(this.model.toJSON());
+			console.log(this.model.get('weather'));
 			this.$el.append( this.template( this.model.toJSON() ));
 		}
 	});

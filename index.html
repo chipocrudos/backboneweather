@@ -12,17 +12,15 @@
     </script>
 
     <script type="text/template" id="countrydata">
-        <div class="col-sm-6 col-md-4 col-lg-3 country">
+        <div class="col-sm-8 col-md-4 col-lg-4 country">
             <div class="thumbnail">
               <img src="http://www.geonames.org/flags/x/<%=alpha2Code.toLowerCase()%>.gif" alt="<%=name%>" class="flag">
               <div class="caption">
-                <h3><%=name%></h3>
+                <h4><%=name%></h4>
+                <h5><small><%=subregion%></small></h5>
+                <h5><u><%=translations.es%></u></h5>
                 <p>Capital: <%=capital%></p>
                 <p>Población: <%=population%></p>
-                <!-- p>
-                    <a href="#" class="btn btn-primary" role="button">Button</a>
-                    <a href="#" class="btn btn-default" role="button">Button</a>
-                </p -->
               </div>
             </div>
           </div>
@@ -67,7 +65,20 @@
                     seccion de datos    
             </section>
 
-            <footer class="col-sm-12 col-md-12">Aquí el pie de pagina</footer>
+            <footer class="col-sm-12 col-md-12">
+                <div class="col-sm-6 col-md-6">
+                    Consumo de datos con backbone.js
+                </div>
+                <div class="col-sm-6 col-md-6">
+                   <ul class="list-group">
+                      <li class="list-group-item"><a href="http://jquery.com/">http://jquery.com/</a></li>
+                      <li class="list-group-item"><a href="http://getbootstrap.com/">http://getbootstrap.com/</a></li>
+                      <li class="list-group-item"><a href="http://backbonejs.org/">http://backbonejs.org/</a></li>
+                      <li class="list-group-item"><a href="http://underscorejs.org/">http://underscorejs.org/</a></li>
+                    </ul>
+                </div>
+                
+            </footer>
         </div>
         
     </main>

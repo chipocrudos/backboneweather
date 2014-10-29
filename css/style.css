@@ -17,27 +17,18 @@ main {
 }
 
 footer {
-	margin: 5px auto;
+	margin: 15px auto;
+	padding-top: 10px;
 	height: 10%;
+	border-top: 1px solid #eee;
 }
 
 section {
 	height: 100%;
 }
 
-/*
-[class*="col-"] {
-  padding-top: 15px;
-  padding-bottom: 15px;
-  background-color: #eee;
-  background-color: rgba(86,61,124,.15);
-  border: 1px solid #ddd;
-  border: 1px solid rgba(86,61,124,.2);
-}
-*/
-
 .country {
-	height: 350px;
+	min-height: 450px;
 }
 
 img.flag{
