@@ -1,4 +1,4 @@
-//(function () {
+(function () {
 
 /* models */
 	//modelo paises
@@ -6,27 +6,13 @@
 
 	//modelo weather
 	var WeatherModel = Backbone.Model.extend({
-		default:{
-			weather:[],
-			wind:{},
-			main:{},
-			coord:{},
-			sys:{},
-			clouds:{},
-		},
 		initialize: function(option){
 			this.capital = option.capital;
 			this.alpha2Code = option.alpha2Code;
-			this.fetch();
 		},
 		url: function(){
-			return 'http://api.openweathermap.org/data/2.5/weather?q=' + encodeURIComponent(this.capital) + ','+ encodeURIComponent(this.alpha2Code);
+			return 'http://api.openweathermap.org/data/2.5/weather?q=' + encodeURIComponent(this.capital) + ','+ encodeURIComponent(this.alpha2Code) + '&units=metric';
 		},
-		data: function(){
-			var info = {}
-			info.weather = this.get('weather')[0]
-		}
-
 	});
 
 /* collections */
@@ -73,8 +59,8 @@
 	    sortBy : function(sortAttributes){
 	        var attributes = arguments;
                 if(attributes.length){
-                this.models = this._sortBy(this.models,attributes);
-            }   
+                	this.models = this._sortBy(this.models,attributes);
+            	}   
 	    },
 	    /**
 	     * Recursive sort
@@ -158,9 +144,17 @@
 				capital: item.get('capital'),
 				alpha2Code: item.get('alpha2Code')
 			});
-			//console.log(weather.toJSON());
-			item.set({weather:weather.toJSON()});
-			var countryview = new CountryView({model:item});
+			weather.fetch({
+				success:function(){
+					item.set({weather:weather.toJSON()});
+					var countryview = new CountryView({model:item});
+				},
+				error: function(){
+					item.set({weather:false});
+					var countryview = new CountryView({model:item});
+				}
+
+			});
 		},
 		searchValue: function(event){
 			event.preventDefault();
@@ -188,20 +182,10 @@
 			this.render();
 		},
 		render: function(){
-			console.log(this.model.toJSON());
-			console.log(this.model.get('weather'));
 			this.$el.append( this.template( this.model.toJSON() ));
 		}
 	});
-
-
 /* asignación de objectos*/
 	//region
 	var regionlistview = new RegionView();
-
-	//test variable
-	var countriecollection = new CountriesCollection({region:'americas'});
-	var results = new ResultsCountries();
-	results.reset(countriecollection.toArray());
-
-//}());
+}());

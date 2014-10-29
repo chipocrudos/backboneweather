@@ -12,15 +12,32 @@
     </script>
 
     <script type="text/template" id="countrydata">
-        <div class="col-sm-8 col-md-4 col-lg-4 country">
+        <div class="col-sm-10 col-md-8 col-lg-6 country">
             <div class="thumbnail">
               <img src="http://www.geonames.org/flags/x/<%=alpha2Code.toLowerCase()%>.gif" alt="<%=name%>" class="flag">
               <div class="caption">
                 <h4><%=name%></h4>
                 <h5><small><%=subregion%></small></h5>
-                <h5><u><%=translations.es%></u></h5>
+                <h4><u><%=translations.es%></u></h4>
                 <p>Capital: <%=capital%></p>
-                <p>Población: <%=population%></p>
+                <p>Población: <%= _.numberFormat(population,0) %></p>
+                <% if (_.isObject(weather)){ %>
+                    <p>
+                        <img src="http://openweathermap.org/img/w/<%=weather.weather[0].icon%>.png"><small><%=weather.weather[0].description%></small>
+                    </p>
+
+                    <p>
+                        Tem: <%= _.numberFormat(weather.main.temp,2) %> °C</br>
+                        Tem max: <%= _.numberFormat(weather.main.temp_max,2) %> °C</br>
+                        Tem min: <%= _.numberFormat(weather.main.temp_min,2) %> °C
+                    </p>
+                    <p>
+                        Humedad: <%=weather.main.humidity%> %
+                    </p>
+                    <p>
+                        Presión: <%=weather.main.pressure%> hpa
+                    </p>
+                <% } %>               
               </div>
             </div>
           </div>
@@ -55,32 +72,43 @@
                         <div class="btn-group">
                             <button type="button" id="name" class="btn btn-primary btn-order">Nombre</button>
                             <button type="button" id="population" class="btn btn-default btn-order">Población</button>
-                            
                         </div>
                     </div>
                   </nav>
             </aside>
 
             <section class="col-sm-6 col-md-8 col-md-pull-3">
-                    seccion de datos    
+                <blockquote>
+                  <p>
+                    Seleccione una región para la busqueda de paises,</br>
+                    filtre u ordene su selección en el panel.
+                  </br>
+
+                  </p>
+                  <footer>Desarrollo con backbonejs</footer>
+                </blockquote>
             </section>
 
-            <footer class="col-sm-12 col-md-12">
-                <div class="col-sm-6 col-md-6">
-                    Consumo de datos con backbone.js
-                </div>
-                <div class="col-sm-6 col-md-6">
-                   <ul class="list-group">
-                      <li class="list-group-item"><a href="http://jquery.com/">http://jquery.com/</a></li>
-                      <li class="list-group-item"><a href="http://getbootstrap.com/">http://getbootstrap.com/</a></li>
-                      <li class="list-group-item"><a href="http://backbonejs.org/">http://backbonejs.org/</a></li>
-                      <li class="list-group-item"><a href="http://underscorejs.org/">http://underscorejs.org/</a></li>
-                    </ul>
-                </div>
-                
-            </footer>
+           
         </div>
-        
+        <footer class="col-sm-12 col-md-12">
+            <div class="col-sm-6 col-md-6">
+                <ul class="list-group">
+                  <li class="list-group-item"><a href="http://openweathermap.org" target="_blank">openweathermap</a></li>
+                  <li class="list-group-item"><a href="http://restcountries.eu" target="_blank">restcountries</a></li>
+                  <li class="list-group-item"><a href="http://www.geonames.org" target="_blank">geonames</a></li>
+                </ul>
+            </div>
+            <div class="col-sm-6 col-md-6">
+               <ul class="list-group">
+                  <li class="list-group-item"><a href="http://jquery.com/" target="_blank">jquery</a></li>
+                  <li class="list-group-item"><a href="http://getbootstrap.com/" target="_blank">bootstrap</a></li>
+                  <li class="list-group-item"><a href="http://backbonejs.org/" target="_blank">backbonejs</a></li>
+                  <li class="list-group-item"><a href="http://underscorejs.org/" target="_blank">underscorejs</a></li>
+                  <li class="list-group-item"><a href="http://epeli.github.io/underscore.string/" target="_blank">underscore.string</a></li>
+                </ul>
+            </div>
+        </footer>
     </main>
    
     <script type="text/javascript" src="js/vendor/jquery-2.1.1.min.js"></script>
@@ -89,5 +117,8 @@
     <script type="text/javascript" src="js/vendor/bootstrap.min.js"></script>
     <script type="text/javascript" src="js/vendor/underscore.string.js"></script>
     <script type="text/javascript" src="js/main.js"></script>
+    <script>
+        _.mixin(_.str.exports());
+    </script>
 </body>
 </html>

@@ -6,14 +6,10 @@ html, body {
 	height: 90%;
 }
 
-main, footer {
-	width: 90%;
-}
-
 main {
 	margin: 50px auto;
+	min-height: 90%;
 	width: 90%;
-	height: 90%;
 }
 
 footer {
@@ -21,14 +17,15 @@ footer {
 	padding-top: 10px;
 	height: 10%;
 	border-top: 1px solid #eee;
+	width: 90%;
 }
 
 section {
-	height: 100%;
+	min-height: 100%;
 }
 
 .country {
-	min-height: 450px;
+	min-height: 550px;
 }
 
 img.flag{
