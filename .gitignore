@@ -1,0 +1,6 @@
+*.pyc
+*~
+*.swp
+archivo/docs
+archivo/humanos
+/static
